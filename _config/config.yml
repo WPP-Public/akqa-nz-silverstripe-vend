@@ -1,0 +1,16 @@
+SiteConfig:
+  extensions:
+    - Heyday\Vend\SilverStripe\Config
+
+Injector:
+  Heyday\Vend\SilverStripe\Connector:
+    constructor:
+      - %$Logger
+
+  Heyday\Vend\SilverStripe\RequestAccessToken:
+    properties:
+      Connector: %$Heyday\Vend\SilverStripe\Connector
+
+  Heyday\Vend\SilverStripe\RequestRefreshToken:
+    properties:
+      Connector: %$Heyday\Vend\SilverStripe\Connector

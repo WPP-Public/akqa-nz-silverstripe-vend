@@ -1,0 +1,23 @@
+{
+  "name": "heyday/silverstripe-vend",
+  "description": "Provides Vend API integration for SilverStripe",
+  "type": "silverstripe-module",
+  "homepage": "http://github.com/heyday/silverstripe-vend",
+  "keywords": ["silverstripe", "Vend", "VendAPI"],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Ben Dubuisson",
+      "email": "ben.dubuisson@heyday.co.nz"
+    }
+  ],
+  "support": {
+    "issues": "http://github.com/heyday/silverstripe-vend/issues"
+  },
+  "require": {
+    "vendapi/vendapi": "dev-master"
+  },
+  "autoload": {
+    "psr-4": { "Heyday\\Vend\\Silverstripe\\": "src/" }
+  }
+}

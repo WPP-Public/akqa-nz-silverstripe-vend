@@ -1,0 +1,76 @@
+<?php
+namespace Heyday\Vend\SilverStripe;
+/**
+ * Class AvailabilityAdmin
+ */
+class Admin extends \LeftAndMain
+{
+
+    /**
+     * @var string
+     */
+    private static $url_base = "admin";
+
+    /**
+     * @var string
+     */
+    private static $url_segment = 'vend';
+
+    /**
+     * @var string
+     */
+    private static $url_rule = '/$Action/$ID/$OtherID';
+
+    /**
+     * @var string
+     */
+    private static $menu_title = 'Vend Admin';
+
+    /**
+     * @var string
+     */
+    private static $menu_icon = 'silverstripe-vend/img/vend.png';
+
+    /**
+     * @var int
+     */
+    private static $menu_priority = 0;
+
+    /**
+     * @var int
+     */
+    private static $url_priority = 50;
+
+    /**
+     * @var array
+     */
+    private static $allowed_actions = array(
+        'VendSetupForm'
+    );
+
+    /**
+     * init method
+     */
+    public function init()
+    {
+        \Requirements::css('silverstripe-vend/css/vend-admin.css');
+        parent::init();
+    }
+
+    /**
+     * @return SetupForm
+     * @throws SetupException
+     */
+    public function getEditForm()
+    {
+        $client_id = \Config::inst()->get('VendAPI', 'clientID');
+        $client_secret = \Config::inst()->get('VendAPI', 'clientSecret');
+        $redirect_uri = \Config::inst()->get('VendAPI', 'redirectURI');
+        if (is_null($client_id) || is_null($client_secret) || is_null($redirect_uri)) {
+            throw new SetupException;
+        }
+        return new SetupForm($this, 'EditForm');
+    }
+
+
+}
