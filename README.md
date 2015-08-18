@@ -16,7 +16,9 @@ you need to sign up for a Vend developer account.
 
 When you have done so, set your details in a yml config file under `VendAPI`.
 
-eg `mysite/_config/vend.yml` :
+eg:
+ 
+`mysite/_config/vend.yml` :
 
 ```
 ################
@@ -34,13 +36,35 @@ After a `dev/build` and a `flush` you should have a new Menu called `Vend Admin`
 
 ##Implementation
 
-To use you just need to use the `Heyday\Vend\SilverStripe\Connection` and follow the docs of the [VendAPI package](https://github.com/brucealdridge/VendAPI) for the other methods.
+To use you just need to inject the `Heyday\Vend\Connection` where you want to use it and follow the docs of the [VendAPI package](https://github.com/brucealdridge/VendAPI) for the other methods.
 
 
 eg:
 
+###injection config
+
 ```
-$connection = new Heyday\Vend\SilverStripe\Connection();
-$products = $connection->getProducts();
+Injector:
+
+  Page_Controller:
+    properties:
+      VendConnection: %$Heyday\Vend\Connection
+      
+```
+###implementation in Page_Controller
+
+```
+    protected $vendConnection;
+
+    public function setVendConnection($vendConnection)
+    {
+        $this->vendConnection = $vendConnection;
+    }
+
+    public function VendTest()
+    {
+        $this->vendConnection->debug(true);
+        $products = $this->vendConnection->getProducts();
+    }
 ```        
   
