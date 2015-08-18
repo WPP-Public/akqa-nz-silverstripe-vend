@@ -18,6 +18,6 @@
     "vendapi/vendapi": "dev-master"
   },
   "autoload": {
-    "psr-4": { "Heyday\\Vend\\Silverstripe\\": "src/" }
+    "psr-4": { "Heyday\\Vend\\": "src/" }
   }
 }

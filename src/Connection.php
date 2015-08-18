@@ -1,5 +1,6 @@
 <?php
-namespace Heyday\Vend\SilverStripe;
+namespace Heyday\Vend;
+
 use VendAPI\VendAPI;
 
 /**
@@ -9,16 +10,18 @@ use VendAPI\VendAPI;
 class Connection extends VendAPI
 {
 
+
     /**
-     *
+     * instantiating the VendAPI object and passing the required parameters
      */
-    public function __construct()
+    public function __construct(TokenManager $tokenManager)
     {
+        $this->tokenManager = $tokenManager;
         $config = \SiteConfig::current_site_config();
         $shopName = $config->VendShopName;
-        $accesToken = $config->VendAccessToken;
         $url = "https://$shopName.vendhq.com";
-        parent::__construct($url, 'Bearer', $accesToken);
+        parent::__construct($url, 'Bearer', $tokenManager->getToken());
     }
+
 
 }

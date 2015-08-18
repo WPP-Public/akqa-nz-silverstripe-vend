@@ -19,7 +19,8 @@ class SetupForm extends \Form
         $this->addExtraClass('vend-form');
         $this->controller = $controller;
         $config = \SiteConfig::current_site_config();
-        $vendAccessToken = $config->VendAccessToken;
+        $vendToken = VendToken::get()->first();
+        $vendAccessToken = $vendToken->AccessToken;
         $vendShopName = $config->VendShopName;
         $fields = new \FieldList();
         $actions = new \FieldList();

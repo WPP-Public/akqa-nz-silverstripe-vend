@@ -6,8 +6,26 @@ namespace Heyday\Vend\SilverStripe;
  * This token as well is saved in the siteconfig along with the refresh token
  * Class VendAuthorise_Controller
  */
+use Heyday\Vend\TokenManager;
+
+/**
+ * Class Authorise_Controller
+ * @package Heyday\Vend\SilverStripe
+ */
 class Authorise_Controller extends \Controller
 {
+    /**
+     * @var TokenManager
+     */
+    protected $tokenManager;
+
+    /**
+     * @param $tokenManager TokenManager
+     */
+    public function setTokenManager($tokenManager)
+    {
+        $this->tokenManager = $tokenManager;
+    }
 
     /**
      * @return string
@@ -28,13 +46,12 @@ class Authorise_Controller extends \Controller
     }
 
     /**
-     * Get tokens and store them
+     * Gets first token and stores them
      * @param $code
+     * @return bool
      */
     private function getFirstToken($code)
     {
-        $request = \Object::create('Heyday\Vend\SilverStripe\RequestAccessToken', $code);
-        return $request->get();
-
+        return $this->tokenManager->getFirstToken($code);
     }
 }

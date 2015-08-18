@@ -1,16 +1,17 @@
 SiteConfig:
   extensions:
-    - Heyday\Vend\SilverStripe\Config
+    - Heyday\Vend\SilverStripe\SiteConfig
 
 Injector:
-  Heyday\Vend\SilverStripe\Connector:
+
+  Heyday\Vend\TokenManager:
+    class: Heyday\Vend\TokenManager
+
+  Heyday\Vend\SilverStripe\Authorise_Controller:
+    properties:
+      TokenManager: %$Heyday\Vend\TokenManager
+
+  Heyday\Vend\Connection:
+    class: Heyday\Vend\Connection
     constructor:
-      - %$Logger
-
-  Heyday\Vend\SilverStripe\RequestAccessToken:
-    properties:
-      Connector: %$Heyday\Vend\SilverStripe\Connector
-
-  Heyday\Vend\SilverStripe\RequestRefreshToken:
-    properties:
-      Connector: %$Heyday\Vend\SilverStripe\Connector
+      - %$Heyday\Vend\TokenManager
