@@ -63,7 +63,6 @@ Injector:
 
     public function VendTest()
     {
-        $this->vendConnection->debug(true);
         $products = $this->vendConnection->getProducts();
     }
 ```        
