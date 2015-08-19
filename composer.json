@@ -14,14 +14,8 @@
   "support": {
     "issues": "http://github.com/heyday/silverstripe-vend/issues"
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/brucealdridge/VendAPI.git"
-    }
-  ],
   "require": {
-    "vendapi/vendapi": "dev-master#dd32515e6a0b93b912811bdeaedfd079b873fa0c"
+    "vendapi/vendapi": "1.0"
   },
   "autoload": {
     "psr-4": { "Heyday\\Vend\\": "src/" }
