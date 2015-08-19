@@ -12,7 +12,7 @@ using Composer: `composer require heyday/silverstripe-vend:dev/master`
 
 ##Setup
 
-you need to sign up for a Vend developer account: [https://developers.vendhq.com/](https://developers.vendhq.com/)
+First you need to sign up for a Vend developer account: [https://developers.vendhq.com/](https://developers.vendhq.com/)
 
 When you have done so, set your details in a yml config file under `VendAPI`.
 
@@ -31,6 +31,26 @@ VendAPI:
   redirectURI: admin/vend/authorise
 
 ```
+
+Also map the route you have setup as a redirectURI in your Vend app to the `Heyday\Vend\SilverStripe\Authorise_Controller`.
+This controller handles the data returned by the Vend API when you first authorise the app to connect to your store.
+
+eg:
+
+`mysite/_config/routing.yml` :
+
+```
+---
+Name: vendroutes
+After: 'framework/routes#coreroutes'
+---
+Director:
+  rules:
+    'admin/vend/authorise': 'Heyday\Vend\SilverStripe\Authorise_Controller'
+---
+
+```
+
 
 After a `dev/build` and a `flush` you should have a new Menu called `Vend Admin` where the next steps of the setup are done.
 

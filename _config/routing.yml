@@ -1,8 +1,0 @@
----
-Name: vendroutes
-After: 'framework/routes#coreroutes'
----
-Director:
-  rules:
-    'admin/vend/authorise': 'Heyday\Vend\SilverStripe\Authorise_Controller'
----
