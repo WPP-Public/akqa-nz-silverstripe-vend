@@ -1,5 +1,5 @@
 <?php
-namespace Heyday\Vend\SilverStripe;
+namespace Heyday\Vend\Exceptions;
 
 /**
  * Thrown when there is a setup issue

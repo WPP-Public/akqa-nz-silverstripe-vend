@@ -1,7 +1,7 @@
 #Silverstripe Vend API integration
 This is basically a wrapper for the [VendAPI package](https://github.com/brucealdridge/VendAPI) by @brucealdridge for Silverstripe.
 
-The main difference is implementation for OAuth2 and refresh tokens.
+The main difference is implementation for OAuth2 with token management.
 ##Requires
 - Silverstripe 3.1
 - The [vendapi/vendapi](https://github.com/brucealdridge/VendAPI) package

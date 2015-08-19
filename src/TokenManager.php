@@ -4,6 +4,10 @@ namespace Heyday\Vend;
 use Heyday\Vend\SilverStripe\VendToken;
 
 /**
+ * This class is responsible for returning the token,
+ * saving it into the database,
+ * getting the first ever token after setup,
+ * and refreshing the token if expired
  * Class TokenManager
  *
  */
@@ -11,7 +15,8 @@ class TokenManager
 {
 
     /**
-     *
+     * Loading all the neede variables
+     * @throws Exceptions\SetupException
      */
     public function __construct()
     {
@@ -23,22 +28,20 @@ class TokenManager
         $this->client_secret = \Config::inst()->get('VendAPI', 'clientSecret');
         $this->redirect_uri = \Director::absoluteBaseURLWithAuth() . \Config::inst()->get('VendAPI', 'redirectURI');
         if (is_null($this->client_id) || is_null($this->client_secret)) {
-            throw new SilverStripe\SetupException;
+            throw new Exceptions\SetupException;
         }
     }
 
     /**
+     * Making the curl call to the api and calling setTokens() on success
      * @param $body
      * @return bool
-     * @throws ConnectorException
+     * @throws Exceptions\TokenException
      */
     public function send($body)
     {
-
         $ch = curl_init($this->url . '/api/1.0/token');
 
-
-        //body
         if (isset($body) && !is_null($body)) {
             $length = strlen($body);
         } else {
@@ -52,21 +55,19 @@ class TokenManager
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
-
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         //making the call
         if ($response = curl_exec($ch)) {
             curl_close($ch);
             $json = json_decode($response);
-            if (isset($json->error)) { //
-                throw new SilverStripe\TokenException($json->error);
+            if (isset($json->error)) {
+                throw new Exceptions\TokenException($json->error);
             }
             return $this->setTokens($json);
         } else {
-            throw new SilverStripe\TokenException;
+            throw new Exceptions\TokenException('Curl call failed');
         }
     }
 
@@ -74,7 +75,6 @@ class TokenManager
      * set the tokens in the DB
      * @param $json
      * @return bool
-     * @throws ValidationException
      * @throws null
      */
     public function setTokens($json)
@@ -89,21 +89,19 @@ class TokenManager
         if (isset($refresh_token) && !empty($refresh_token)) {
             $vendToken->RefreshToken = $refresh_token;
         }
-
         $vendToken->write();
         return true;
     }
 
     /**
+     * Return the token, refresh it if expired
      * @return mixed
      */
     public function getToken()
     {
-        //if not set get first token
-        //if expired get new token
         $vendToken = VendToken::get()->first();
         $now = time();
-        if ($vendToken->AccessTokenExpiry < $now) {
+        if ($vendToken->AccessTokenExpiry < $now) { //if expired get new token
             $this->refreshToken();
             $vendToken = VendToken::get()->first();
         }
@@ -115,7 +113,6 @@ class TokenManager
      * Get the first token. Only ever called the first time from Authorise_Controller.php
      * @param $code
      * @return bool
-     * @throws SilverStripe\TokenException
      */
     public function getFirstToken($code)
     {
@@ -125,8 +122,8 @@ class TokenManager
 
 
     /**
+     * Refresh the token
      * @return bool
-     * @throws SilverStripe\TokenException
      */
     public function refreshToken()
     {
