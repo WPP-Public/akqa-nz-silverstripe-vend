@@ -12,7 +12,7 @@ using Composer: `composer require heyday/silverstripe-vend:dev/master`
 
 ##Setup
 
-you need to sign up for a Vend developer account.
+you need to sign up for a Vend developer account: [https://developers.vendhq.com/](https://developers.vendhq.com/)
 
 When you have done so, set your details in a yml config file under `VendAPI`.
 
