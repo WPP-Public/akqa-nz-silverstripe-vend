@@ -20,7 +20,7 @@
       "url": "https://github.com/brucealdridge/VendAPI.git"
     }
   ],
-  "minimum-stability": "dev",cd sil 
+  "minimum-stability": "dev",
   "require": {
     "vendapi/vendapi": "dev-master#dd32515e6a0b93b912811bdeaedfd079b873fa0c"
   },
