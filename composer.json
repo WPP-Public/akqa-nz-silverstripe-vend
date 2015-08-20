@@ -15,7 +15,7 @@
     "issues": "http://github.com/heyday/silverstripe-vend/issues"
   },
   "require": {
-    "vendapi/vendapi": "dev-master"
+    "vendapi/vendapi": "1.5"
   },
   "autoload": {
     "psr-4": { "Heyday\\Vend\\": "src/" }
