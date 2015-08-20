@@ -10,7 +10,6 @@ The main difference is implementation for OAuth2 with token management.
 
 using Composer: `composer require heyday/silverstripe-vend:dev/master`
 
-You might have to add `"minimum-stability": "dev"` in your `composer.json`
 
 ##Setup
 
