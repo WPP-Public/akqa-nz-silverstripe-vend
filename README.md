@@ -67,12 +67,12 @@ eg:
 ```
 Injector:
 
-  Page_Controller:
+  SomePage_Controller:
     properties:
       VendConnection: %$Heyday\Vend\Connection
       
 ```
-###implementation in Page_Controller
+###implementation in SomePage_Controller
 
 ```
     protected $vendConnection;
