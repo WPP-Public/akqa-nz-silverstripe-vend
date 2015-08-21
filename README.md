@@ -55,7 +55,7 @@ Director:
 
 After a `dev/build` and a `flush` you should have a new Menu called `Vend Admin` where the next steps of the setup are done.
 
-You (or the owner of the shop) need to fill in the shop name, after which a link will appear. When you click on this link You will be presented with a request for the app to access your shop.
+You (or the owner of the shop) need to fill in the shop name, after which a link will appear. When you click on this link, you will be presented with a request for the app to access your shop.
 Once it is authorised, the first token is stored along the refresh token and the cycle starts.
 
 Every time the connection is instantiate, it checks if the token has expired and gets a fresh one if needed. It does the same for the resfresh_token.
