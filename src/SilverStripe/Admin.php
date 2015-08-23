@@ -1,5 +1,7 @@
 <?php
 namespace Heyday\Vend\SilverStripe;
+use Heyday\Vend\Exceptions\SetupException;
+
 /**
  * Class AvailabilityAdmin
  */
@@ -58,10 +60,12 @@ class Admin extends \LeftAndMain
     }
 
     /**
+     * @param Int $id
+     * @param \FieldList $fields
      * @return SetupForm
      * @throws SetupException
      */
-    public function getEditForm()
+    public function getEditForm($id = null, $fields = null)
     {
         $client_id = \Config::inst()->get('VendAPI', 'clientID');
         $client_secret = \Config::inst()->get('VendAPI', 'clientSecret');
