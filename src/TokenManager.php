@@ -48,6 +48,7 @@ class TokenManager
             $length = '0';
         }
 
+        $headers = array();
         //setting the headers
         $headers[] = "Content-length: " . $length;
         $headers[] = "accept: application/json";
@@ -100,14 +101,25 @@ class TokenManager
     public function getToken()
     {
         $vendToken = VendToken::get()->first();
-        $now = time();
-        if ($vendToken->AccessTokenExpiry < $now) { //if expired get new token
+        if ($this->hasTokenExpired($vendToken->AccessTokenExpiry)) { //if expired get new token
             $this->refreshToken();
             $vendToken = VendToken::get()->first();
         }
         return $vendToken->AccessToken;
-
     }
+
+    /**
+     * Checks if token has expired. Added a minute for extra safety
+     * @param $tokenExpiry
+     * @return bool
+     */
+    public static function hasTokenExpired($tokenExpiry)
+    {
+        $now = time() + 60;
+        $expiry = $tokenExpiry;
+        return ($expiry <= $now);
+    }
+
 
     /**
      * Get the first token. Only ever called the first time from Authorise_Controller.php
