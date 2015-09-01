@@ -30,12 +30,13 @@ class SetupForm extends \Form
                 "<h1>Vend Integration</h1>"
             )
         );
+
         if (!is_null($vendAccessToken) && !empty($vendAccessToken)) {
             $url = $this->getAuthURL();
             $fields->add(
                 new \LiteralField(
                     'explanation',
-                    "<p>you're all setup!<br> If you need to reauthenticate, click <a href='$url' target='_blank'>here</a></p>"
+                    "<p>You're all setup!<br> If you need to reauthenticate, click <a href='$url' target='_blank'>here</a></p>"
                 )
             );
         } else {
@@ -54,17 +55,18 @@ class SetupForm extends \Form
                         "Please remember to set your app settings in a config file."
                     )
                 );
-                $fields->add(
-                    new \TextField(
-                        'VendShopName',
-                        'Vend Shop Name (yourshopname.vendhq.com)'
-                    )
-                );
-                $actions->push(new \FormAction('doSave', 'Save'));
+
 
             }
         }
-
+        $fields->add(
+            new \TextField(
+                'VendShopName',
+                'Vend Shop Name (yourshopname.vendhq.com)',
+                $vendShopName
+            )
+        );
+        $actions->push(new \FormAction('doSave', 'Save'));
 
         // Reduce attack surface by enforcing POST requests
         $this->setFormMethod('POST', true);
