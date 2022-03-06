@@ -10,12 +10,13 @@ namespace Heyday\Vend\SilverStripe;
 use Heyday\Vend\TokenManager;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Control\Controller;
 
 /**
  * Class Authorise_Controller
  * @package Heyday\Vend\SilverStripe
  */
-class Authorise_Controller extends \Controller
+class Authorise_Controller extends Controller
 {
     /**
      * @var TokenManager
