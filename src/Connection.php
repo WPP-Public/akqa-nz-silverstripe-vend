@@ -2,6 +2,7 @@
 namespace Heyday\Vend;
 
 use VendAPI\VendAPI;
+use SilverStripe\SiteConfig\SiteConfig
 
 /**
  * Class Connector
@@ -17,7 +18,7 @@ class Connection extends VendAPI
     public function __construct(TokenManager $tokenManager)
     {
         $this->tokenManager = $tokenManager;
-        $config = \SiteConfig::current_site_config();
+        $config = SiteConfig::current_site_config();
         $shopName = $config->VendShopName;
         $url = "https://$shopName.vendhq.com";
         parent::__construct($url, 'Bearer', $tokenManager->getToken());

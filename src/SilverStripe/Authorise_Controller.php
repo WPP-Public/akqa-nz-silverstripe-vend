@@ -6,7 +6,10 @@ namespace Heyday\Vend\SilverStripe;
  * This token as well is saved in the siteconfig along with the refresh token
  * Class VendAuthorise_Controller
  */
+
 use Heyday\Vend\TokenManager;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
 
 /**
  * Class Authorise_Controller
@@ -32,7 +35,7 @@ class Authorise_Controller extends \Controller
      */
     public function index()
     {
-        if (\Member::currentUserID() && \Permission::check('ADMIN')) {
+        if (Member::currentUserID() && Permission::check('ADMIN')) {
             $code = $this->request->getVar('code');
             if (isset($code) && !empty($code)) {
                 if ($this->getFirstToken($code)) {
