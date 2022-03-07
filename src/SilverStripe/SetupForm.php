@@ -10,7 +10,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Director;
 use Heyday\Vend\SilverStripe\VendToken;
-use Vend\VendAPI;
+use VendAPI\VendAPI;
 
 /**
  * Class VendSetupForm
