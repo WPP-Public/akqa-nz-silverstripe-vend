@@ -34,10 +34,10 @@ class SetupForm extends Form
         $vendToken = VendToken::get()->first();
         $vendAccessToken = $vendToken->AccessToken;
         $vendShopName = $config->VendShopName;
-        $fields = new FieldList();
-        $actions = new FieldList();
+        $fields = FieldList::create();
+        $actions = FieldList::create();
         $fields->add(
-            new LiteralField(
+            LiteralField::create(
                 'vend',
                 "<h1>Vend Integration</h1>"
             )
@@ -46,45 +46,42 @@ class SetupForm extends Form
         if (!is_null($vendAccessToken) && !empty($vendAccessToken)) {
             $url = $this->getAuthURL();
             $fields->add(
-                new LiteralField(
+                LiteralField::create(
                     'explanation',
-                    "<p>You're all setup!<br> If you need to reauthenticate, click <a href='$url' target='_blank'>here</a></p>"
+                    "<p>You're all setup!<br> If you need to reauthenticate then <a href='$url' target='_blank'>select this</a> to do so.</p>"
                 )
             );
         } else {
             if (!is_null($vendShopName) && !empty($vendShopName)) {
                 $url = $this->getAuthURL();
                 $fields->add(
-                    new LiteralField(
+                    LiteralField::create(
                         'explanation',
-                        "Please authenticate by clicking <a href='$url' target='_blank'>here</a>"
+                        "<p>Please authenticate by <a href='$url' target='_blank'>selecting this</a>.</p>"
                     )
                 );
             } else {
                 $fields->add(
-                    new LiteralField(
+                    LiteralField::create(
                         'explanation',
-                        "Please remember to set your app settings in a config file."
+                        "<p>Please remember to set your app settings in a config file.</p>"
                     )
                 );
-
-
             }
         }
         $fields->add(
-            new TextField(
+            TextField::create(
                 'VendShopName',
-                'Vend Shop Name (yourshopname.vendhq.com)',
+                'Vend Shop Name (as in: <Name>.vendhq.com)',
                 $vendShopName
             )
         );
-        $actions->push(new FormAction('doSave', 'Save'));
+        $actions->push(FormAction::create('doSave', 'Save'));
 
         // Reduce attack surface by enforcing POST requests
         $this->setFormMethod('POST', true);
 
         parent::__construct($controller, $name, $fields, $actions);
-
     }
 
     /**
