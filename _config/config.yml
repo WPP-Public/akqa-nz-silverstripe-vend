@@ -1,17 +1,17 @@
-SiteConfig:
+SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - Heyday\Vend\SilverStripe\SiteConfig
 
-Injector:
+SilverStripe\Core\Injector\Injector:
 
   Heyday\Vend\TokenManager:
     class: Heyday\Vend\TokenManager
 
   Heyday\Vend\SilverStripe\Authorise_Controller:
     properties:
-      TokenManager: %$Heyday\Vend\TokenManager
+      TokenManager: '%$Heyday\Vend\TokenManager'
 
   Heyday\Vend\Connection:
     class: Heyday\Vend\Connection
     constructor:
-      - %$Heyday\Vend\TokenManager
+      - '%$Heyday\Vend\TokenManager'

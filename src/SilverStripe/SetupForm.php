@@ -1,9 +1,21 @@
 <?php
 namespace Heyday\Vend\SilverStripe;
+
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Director;
+use Heyday\Vend\SilverStripe\VendToken;
+use VendAPI\VendAPI;
+
 /**
  * Class VendSetupForm
  */
-class SetupForm extends \Form
+class SetupForm extends Form
 {
 
     /**
@@ -18,14 +30,14 @@ class SetupForm extends \Form
     {
         $this->addExtraClass('vend-form');
         $this->controller = $controller;
-        $config = \SiteConfig::current_site_config();
+        $config = SiteConfig::current_site_config();
         $vendToken = VendToken::get()->first();
         $vendAccessToken = $vendToken->AccessToken;
         $vendShopName = $config->VendShopName;
-        $fields = new \FieldList();
-        $actions = new \FieldList();
+        $fields = FieldList::create();
+        $actions = FieldList::create();
         $fields->add(
-            new \LiteralField(
+            LiteralField::create(
                 'vend',
                 "<h1>Vend Integration</h1>"
             )
@@ -34,45 +46,42 @@ class SetupForm extends \Form
         if (!is_null($vendAccessToken) && !empty($vendAccessToken)) {
             $url = $this->getAuthURL();
             $fields->add(
-                new \LiteralField(
+                LiteralField::create(
                     'explanation',
-                    "<p>You're all setup!<br> If you need to reauthenticate, click <a href='$url' target='_blank'>here</a></p>"
+                    "<p>You're all setup!<br> If you need to reauthenticate then <a href='$url' target='_blank'>select this</a> to do so.</p>"
                 )
             );
         } else {
             if (!is_null($vendShopName) && !empty($vendShopName)) {
                 $url = $this->getAuthURL();
                 $fields->add(
-                    new \LiteralField(
+                    LiteralField::create(
                         'explanation',
-                        "Please authenticate by clicking <a href='$url' target='_blank'>here</a>"
+                        "<p>Please authenticate by <a href='$url' target='_blank'>selecting this</a>.</p>"
                     )
                 );
             } else {
                 $fields->add(
-                    new \LiteralField(
+                    LiteralField::create(
                         'explanation',
-                        "Please remember to set your app settings in a config file."
+                        "<p>Please remember to set your app settings in a config file.</p>"
                     )
                 );
-
-
             }
         }
         $fields->add(
-            new \TextField(
+            TextField::create(
                 'VendShopName',
-                'Vend Shop Name (yourshopname.vendhq.com)',
+                'Vend Shop Name (as in: <Name>.vendhq.com)',
                 $vendShopName
             )
         );
-        $actions->push(new \FormAction('doSave', 'Save'));
+        $actions->push(FormAction::create('doSave', 'Save'));
 
         // Reduce attack surface by enforcing POST requests
         $this->setFormMethod('POST', true);
 
         parent::__construct($controller, $name, $fields, $actions);
-
     }
 
     /**
@@ -81,8 +90,8 @@ class SetupForm extends \Form
      */
     public function getAuthURL()
     {
-        $clientID = \Config::inst()->get('VendAPI', 'clientID');
-        $redirectURI = \Director::absoluteBaseURLWithAuth() . \Config::inst()->get('VendAPI', 'redirectURI');
+        $clientID = Config::inst()->get(VendAPI::class, 'clientID');
+        $redirectURI = Director::absoluteBaseURLWithAuth() . Config::inst()->get(VendAPI::class, 'redirectURI');
         return "https://secure.vendhq.com/connect?response_type=code&client_id=$clientID&redirect_uri=$redirectURI";
     }
 
@@ -93,9 +102,10 @@ class SetupForm extends \Form
     public function doSave($data)
     {
         $shopName = $data['VendShopName'];
-        $config = \SiteConfig::current_site_config();
+        $config = SiteConfig::current_site_config();
         $config->VendShopName = $shopName;
         $config->write();
         $this->controller->redirectBack();
     }
 }
+

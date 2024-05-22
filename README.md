@@ -1,15 +1,16 @@
 #Silverstripe Vend API integration
-This is basically a wrapper for the [VendAPI package](https://github.com/brucealdridge/VendAPI) by @brucealdridge for Silverstripe.
+
+This module is just a wrapper around the [VendAPI package](https://github.com/brucealdridge/VendAPI) by @brucealdridge for Silverstripe.
 
 This brings implementation for OAuth2 with token management.
+
 ##Requires
-- Silverstripe 3.1
+- Silverstripe 4+
 - The [vendapi/vendapi](https://github.com/brucealdridge/VendAPI) package
  
 ##Install
 
-using Composer: `composer require heyday/silverstripe-vend:dev/master`
-
+`composer require heyday/silverstripe-vend`
 
 ##Setup
 
@@ -19,14 +20,10 @@ When you have done so, set your details in a yml config file under `VendAPI`.
 
 eg:
  
-`mysite/_config/vend.yml` :
+`mysite/_config/vend.yml`:
 
 ```
-################
-###VEND SETUP###
-################
-
-VendAPI:
+VendAPI\VendAPI:
   clientID: g6ohGHJgJHKtuyfUTYfjVjhGhfTUYfTU
   clientSecret: iyGFktyFKUYlguKHkjHUHUiGHKuHGKj
   redirectURI: admin/vend/authorise
@@ -49,35 +46,31 @@ Director:
   rules:
     'admin/vend/authorise': 'Heyday\Vend\SilverStripe\Authorise_Controller'
 ---
-
 ```
-
 
 After a `dev/build` and a `flush` you should have a new Menu called `Vend Admin` where the next steps of the setup are done.
 
-You (or the owner of the shop) need to fill in the shop name, after which a link will appear. When you click on this link, you will be presented with a request for the app to access your shop.
-Once it is authorised, the first token is stored along the refresh token and the cycle starts.
+You (or the owner of the shop) needd to fill in the shop name, after which a link will appear. When the link is selected you'll be presented with a request for the app to access your shop.
+Once it is authorised, the first token is stored in the database along with the refresh token and the cycle starts.
 
-Every time the connection is instantiate, it checks if the token has expired and gets a fresh one if needed. It does the same for the resfresh_token.
+Every time the connection is instantiated, a check is run to see if the token has expired. A new one is issued if required. It does the same for the `refresh_token`.
 
 ##Implementation
 
 To use you just need to inject the `Heyday\Vend\Connection` where you want to use it and follow the docs of the [VendAPI package](https://github.com/brucealdridge/VendAPI) for the other methods.
-
 
 eg:
 
 ###injection config
 
 ```
-Injector:
-
-  SomePage_Controller:
+SilverStripe\Core\Injector\Injector:
+  Your\Namespacde\SomePageController:
     properties:
-      VendConnection: %$Heyday\Vend\Connection
+      VendConnection: '%$Heyday\Vend\Connection'
       
 ```
-###implementation in SomePage_Controller
+###implementation in SomePageController
 
 ```
     protected $vendConnection;
@@ -92,4 +85,3 @@ Injector:
         $products = $this->vendConnection->getProducts();
     }
 ```        
-  

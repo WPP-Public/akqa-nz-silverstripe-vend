@@ -1,11 +1,17 @@
 <?php
+
 namespace Heyday\Vend\SilverStripe;
+
 use Heyday\Vend\Exceptions\SetupException;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\View\Requirements;
+use VendAPI\VendAPI;
+use SilverStripe\Core\Config\Config;
 
 /**
  * Class AvailabilityAdmin
  */
-class Admin extends \LeftAndMain
+class Admin extends LeftAndMain
 {
 
     /**
@@ -55,24 +61,25 @@ class Admin extends \LeftAndMain
      */
     public function init()
     {
-        \Requirements::css('silverstripe-vend/css/vend-admin.css');
+        Requirements::css('silverstripe-vend/css/vend-admin.css');
         parent::init();
     }
 
     /**
      * @param Int $id
-     * @param \FieldList $fields
+     * @param FieldList $fields
      * @return SetupForm
      * @throws SetupException
      */
     public function getEditForm($id = null, $fields = null)
     {
-        $client_id = \Config::inst()->get('VendAPI', 'clientID');
-        $client_secret = \Config::inst()->get('VendAPI', 'clientSecret');
-        $redirect_uri = \Config::inst()->get('VendAPI', 'redirectURI');
+        $client_id = Config::inst()->get(VendAPI::class, 'clientID');
+        $client_secret = Config::inst()->get(VendAPI::class, 'clientSecret');
+        $redirect_uri = Config::inst()->get(VendAPI::class, 'redirectURI');
         if (is_null($client_id) || is_null($client_secret) || is_null($redirect_uri)) {
             throw new SetupException;
         }
+
         return new SetupForm($this, 'EditForm');
     }
 
