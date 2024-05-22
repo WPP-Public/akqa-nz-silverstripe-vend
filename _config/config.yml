@@ -1,9 +1,8 @@
 SilverStripe\SiteConfig\SiteConfig:
   extensions:
-    - Heyday\Vend\SilverStripe\SiteConfig
+    - Heyday\Vend\SilverStripe\SiteConfigExtension
 
 SilverStripe\Core\Injector\Injector:
-
   Heyday\Vend\TokenManager:
     class: Heyday\Vend\TokenManager
 

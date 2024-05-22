@@ -140,8 +140,13 @@ class TokenManager
      */
     public function getFirstToken($code)
     {
-        $body = sprintf("code=%s&client_id=%s&client_secret=%s&grant_type=authorization_code&redirect_uri=%s",
-            $code, $this->client_id, $this->client_secret, $this->redirect_uri);
+        $body = sprintf(
+            "code=%s&client_id=%s&client_secret=%s&grant_type=authorization_code&redirect_uri=%s",
+            $code,
+            $this->client_id,
+            $this->client_secret,
+            $this->redirect_uri
+        );
 
         return $this->send($body);
     }
@@ -154,10 +159,13 @@ class TokenManager
     {
         $vendToken = VendToken::get()->first();
         $refresh_token = $vendToken->RefreshToken;
-        $body = sprintf("refresh_token=%s&client_id=%s&client_secret=%s&grant_type=refresh_token",
-            $refresh_token, $this->client_id, $this->client_secret);
+        $body = sprintf(
+            "refresh_token=%s&client_id=%s&client_secret=%s&grant_type=refresh_token",
+            $refresh_token,
+            $this->client_id,
+            $this->client_secret
+        );
 
         return $this->send($body);
     }
-
 }

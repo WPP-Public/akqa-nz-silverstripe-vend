@@ -1,19 +1,13 @@
 <?php
+
 namespace Heyday\Vend\SilverStripe;
-/**
- * This controller is hit by Vend after Shop owner has authorised your app.
- * The authorisation code is used to make the first token request.
- * This token as well is saved in the siteconfig along with the refresh token
- * Class VendAuthorise_Controller
- */
 
 use Heyday\Vend\TokenManager;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Control\Controller;
+use SilverStripe\Security\Security;
 
 /**
- * Class Authorise_Controller
  * @package Heyday\Vend\SilverStripe
  */
 class Authorise_Controller extends Controller
@@ -36,8 +30,11 @@ class Authorise_Controller extends Controller
      */
     public function index()
     {
-        if (Member::currentUserID() && Permission::check('ADMIN')) {
+        $member = Security::getCurrentUser();
+
+        if ($member && Permission::checkMember($member, 'ADMIN')) {
             $code = $this->request->getVar('code');
+
             if (isset($code) && !empty($code)) {
                 if ($this->getFirstToken($code)) {
                     return $this->redirect('/admin/vend');
@@ -46,6 +43,7 @@ class Authorise_Controller extends Controller
                 return 'There has been an error';
             }
         }
+
         return $this->redirect('/admin');
     }
 

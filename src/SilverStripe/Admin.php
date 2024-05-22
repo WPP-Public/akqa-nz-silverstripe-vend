@@ -76,12 +76,11 @@ class Admin extends LeftAndMain
         $client_id = Config::inst()->get(VendAPI::class, 'clientID');
         $client_secret = Config::inst()->get(VendAPI::class, 'clientSecret');
         $redirect_uri = Config::inst()->get(VendAPI::class, 'redirectURI');
+
         if (is_null($client_id) || is_null($client_secret) || is_null($redirect_uri)) {
             throw new SetupException;
         }
 
         return new SetupForm($this, 'EditForm');
     }
-
-
 }

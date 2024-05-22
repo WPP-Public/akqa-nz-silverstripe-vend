@@ -1,4 +1,5 @@
 <?php
+
 namespace Heyday\Vend\SilverStripe;
 
 use SilverStripe\SiteConfig\SiteConfig;
@@ -17,23 +18,28 @@ use VendAPI\VendAPI;
  */
 class SetupForm extends Form
 {
-
     /**
      * @var array
      */
-    private static $allowed_actions = array('doSave');
+    private static $allowed_actions = ['doSave'];
 
-    /**
-     * @param \Controller $controller
-     */
+
     public function __construct($controller, $name)
     {
         $this->addExtraClass('vend-form');
+
         $this->controller = $controller;
         $config = SiteConfig::current_site_config();
+
         $vendToken = VendToken::get()->first();
-        $vendAccessToken = $vendToken->AccessToken;
-        $vendShopName = $config->VendShopName;
+        $vendAccessToken = false;
+        $vendShopName = false;
+
+        if ($vendToken) {
+            $vendAccessToken = $vendToken->AccessToken;
+            $vendShopName = $config->VendShopName;
+        }
+
         $fields = FieldList::create();
         $actions = FieldList::create();
         $fields->add(
@@ -69,6 +75,7 @@ class SetupForm extends Form
                 );
             }
         }
+
         $fields->add(
             TextField::create(
                 'VendShopName',
@@ -76,6 +83,7 @@ class SetupForm extends Form
                 $vendShopName
             )
         );
+
         $actions->push(FormAction::create('doSave', 'Save'));
 
         // Reduce attack surface by enforcing POST requests
@@ -108,4 +116,3 @@ class SetupForm extends Form
         $this->controller->redirectBack();
     }
 }
-

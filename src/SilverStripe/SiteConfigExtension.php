@@ -1,4 +1,5 @@
 <?php
+
 namespace Heyday\Vend\SilverStripe;
 
 use SilverStripe\ORM\DataExtension;
@@ -6,14 +7,12 @@ use SilverStripe\ORM\DataExtension;
 /**
  * Class VendConfig
  */
-class SiteConfig extends DataExtension
+class SiteConfigExtension extends DataExtension
 {
     /**
      * @var array
      */
-    private static $db = array(
+    private static $db = [
         'VendShopName' => 'Varchar(255)'
-    );
-
+    ];
 }
-
