@@ -35,11 +35,6 @@ class Admin extends LeftAndMain
     private static $menu_title = 'Vend Admin';
 
     /**
-     * @var string
-     */
-    private static $menu_icon = 'silverstripe-vend/img/vend.png';
-
-    /**
      * @var int
      */
     private static $menu_priority = 0;
