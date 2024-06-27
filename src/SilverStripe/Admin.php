@@ -56,7 +56,8 @@ class Admin extends LeftAndMain
      */
     public function init()
     {
-        Requirements::css('silverstripe-vend/css/vend-admin.css');
+        Requirements::css('heyday/silverstripe-vend:css/vend-admin.css');
+
         parent::init();
     }
 

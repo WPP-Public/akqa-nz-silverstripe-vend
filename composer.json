@@ -18,6 +18,11 @@
         "silverstripe/siteconfig": "*",
         "anytech/vendapi": "dev-master"
     },
+    "extra": {
+        "expose": [
+            "css"
+        ]
+    },
     "autoload": {
         "psr-4": {
             "Heyday\\Vend\\": "src/",
