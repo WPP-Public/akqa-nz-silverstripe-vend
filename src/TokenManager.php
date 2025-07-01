@@ -18,29 +18,43 @@ use VendAPI\VendAPI;
  */
 class TokenManager
 {
+    private string $url = '';
+
+    private string $client_id = '';
+
+    private string $client_secret = '';
+
+    private string $redirect_uri = '';
+
     /**
      * Loading all the neede variables
+     *
      * @throws Exceptions\SetupException
      */
     public function __construct()
     {
         $config = SiteConfig::current_site_config();
         $vendShopName = $config->VendShopName;
+
+        if (empty($vendShopName)) {
+            throw new Exceptions\SetupException('Vend shop name is not set');
+        }
+
         $this->url = "https://$vendShopName.vendhq.com";
-        //config
         $this->client_id = Config::inst()->get(VendAPI::class, 'clientID');
         $this->client_secret = Config::inst()->get(VendAPI::class, 'clientSecret');
         $this->redirect_uri = Director::absoluteBaseURLWithAuth() . Config::inst()->get(VendAPI::class, 'redirectURI');
+
         if (is_null($this->client_id) || is_null($this->client_secret)) {
-            throw new Exceptions\SetupException;
+            throw new Exceptions\SetupException('Vend client ID or secret is not set');
         }
     }
 
     /**
      * Making the curl call to the api and calling setTokens() on success
+     *
      * @param $body
      * @return bool
-     * @throws Exceptions\TokenException
      */
     public function send($body)
     {
@@ -52,7 +66,6 @@ class TokenManager
         }
 
         $headers = [];
-        //setting the headers
         $headers[] = "Content-length: " . $length;
         $headers[] = "accept: application/json";
         $headers[] = "Content-Type: application/x-www-form-urlencoded";
@@ -65,16 +78,15 @@ class TokenManager
         //making the call
         if ($response = curl_exec($ch)) {
             curl_close($ch);
+
             $json = json_decode($response);
 
-            if (isset($json->error)) {
-                throw new Exceptions\TokenException($json->error);
+            if ($json) {
+                return $this->setTokens($json);
             }
-
-            return $this->setTokens($json);
-        } else {
-            throw new Exceptions\TokenException('Curl call failed');
         }
+
+        return false;
     }
 
     /**
@@ -91,12 +103,17 @@ class TokenManager
             $vendToken = new VendToken();
         }
 
+        if (!isset($json->access_token)) {
+            return false;
+        }
+
         $vendToken->AccessToken = $json->access_token;
         $vendToken->AccessTokenExpiry = $json->expires;
-        $refresh_token = $json->refresh_token;
 
-        if (isset($refresh_token) && !empty($refresh_token)) {
-            $vendToken->RefreshToken = $refresh_token;
+        $refreshToken = $json->refresh_token;
+
+        if (isset($refreshToken) && !empty($refreshToken)) {
+            $vendToken->RefreshToken = $refreshToken;
         }
 
         $vendToken->write();
@@ -106,14 +123,18 @@ class TokenManager
 
     /**
      * Return the token, refresh it if expired
+     *
      * @return mixed
      */
     public function getToken()
     {
         $vendToken = VendToken::get()->first();
 
-        if ($this->hasTokenExpired($vendToken->AccessTokenExpiry)) { //if expired get new token
+        if (!$vendToken) {
+            return null;
+        } else if ($this->hasTokenExpired($vendToken->AccessTokenExpiry)) {
             $this->refreshToken();
+
             $vendToken = VendToken::get()->first();
         }
 
