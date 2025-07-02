@@ -8,8 +8,8 @@ This brings implementation for OAuth2 with token management.
 
 ## Requires
 
-- Silverstripe 4+
-- The [vendapi/vendapi](https://github.com/brucealdridge/VendAPI) package
+-   Silverstripe 4+
+-   The [vendapi/vendapi](https://github.com/brucealdridge/VendAPI) package
 
 ## Install
 
@@ -28,13 +28,13 @@ eg:
 
 ```yaml
 VendAPI\VendAPI:
-  clientID: g6ohGHJgJHKtuyfUTYfjVjhGhfTUYfTU
-  clientSecret: iyGFktyFKUYlguKHkjHUHUiGHKuHGKj
-  redirectURI: admin/vend/authorise
+    clientID: g6ohGHJgJHKtuyfUTYfjVjhGhfTUYfTU
+    clientSecret: iyGFktyFKUYlguKHkjHUHUiGHKuHGKj
+    redirectURI: admin/vend/authorise
 ```
 
 Also map the route you have setup as a redirectURI in your Vend app to the
-`Heyday\Vend\SilverStripe\Authorise_Controller`. This controller handles the
+`Heyday\Vend\SilverStripe\AuthoriseController`. This controller handles the
 data returned by the Vend API when you first authorise the app to connect to
 your store.
 
@@ -46,11 +46,11 @@ my Vend app:
 ```yaml
 ---
 Name: vendroutes
-After: 'framework/routes#coreroutes'
+After: "framework/routes#coreroutes"
 ---
 Director:
-  rules:
-    'admin/vend/authorise': 'Heyday\Vend\SilverStripe\Authorise_Controller'
+    rules:
+        "admin/vend/authorise": 'Heyday\Vend\SilverStripe\AuthoriseController'
 ---
 ```
 
@@ -78,9 +78,9 @@ eg:
 
 ```yaml
 SilverStripe\Core\Injector\Injector:
-  Your\Namespace\SomePageController:
-    properties:
-      VendConnection: '%$Heyday\Vend\Connection'
+    Your\Namespace\SomePageController:
+        properties:
+            VendConnection: '%$Heyday\Vend\Connection'
 ```
 
 ### Implementation in SomePageController

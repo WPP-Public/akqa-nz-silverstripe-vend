@@ -34,17 +34,49 @@ class Authorise_Controller extends Controller
 
         if ($member && Permission::checkMember($member, 'ADMIN')) {
             $code = $this->request->getVar('code');
+            $state = $this->request->getVar('state');
 
             if (isset($code) && !empty($code)) {
+                // Validate the state parameter to prevent CSRF attacks
+                if (!$this->validateState($state)) {
+                    return 'Invalid state parameter. This could be a security issue. Please try again.';
+                }
+
                 if ($this->getFirstToken($code)) {
                     return $this->redirect('/admin/vend');
+                } else {
+                    return 'Failed to obtain access token from Vend. Please check your configuration and try again.';
                 }
             } else {
-                return 'There has been an error';
+                return 'Authorization code is missing. Please try the authorization process again.';
             }
         }
 
         return $this->redirect('/admin');
+    }
+
+    /**
+     * Validates the state parameter against the stored session value
+     * @param string $state
+     * @return bool
+     */
+    private function validateState($state)
+    {
+        if (empty($state)) {
+            return false;
+        }
+
+        $session = $this->request->getSession();
+        $storedState = $session->get('vend_oauth_state');
+
+        if (empty($storedState)) {
+            return false;
+        }
+
+        // Clear the state from session after validation
+        $session->clear('vend_oauth_state');
+
+        return hash_equals($storedState, $state);
     }
 
     /**

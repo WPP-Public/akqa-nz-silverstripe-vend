@@ -54,7 +54,11 @@ class SetupForm extends Form
             $fields->add(
                 LiteralField::create(
                     'explanation',
-                    "<p>You're all setup!<br> If you need to reauthenticate then <a href='$url' target='_blank'>select this</a> to do so.</p>"
+                    sprintf(
+                        "<p>You're all setup!<br> If you need to reauthenticate then <a href='%s' target='_blank'>" .
+                            "select this</a> to do so.</p>",
+                        $url
+                    )
                 )
             );
         } else {
@@ -94,13 +98,24 @@ class SetupForm extends Form
 
     /**
      * Returns the URL needed for shop owner authorisation
-     * @return string
      */
-    public function getAuthURL()
+    public function getAuthURL(): string
     {
         $clientID = Config::inst()->get(VendAPI::class, 'clientID');
         $redirectURI = Director::absoluteBaseURLWithAuth() . Config::inst()->get(VendAPI::class, 'redirectURI');
-        return "https://secure.vendhq.com/connect?response_type=code&client_id=$clientID&redirect_uri=$redirectURI";
+
+        // Generate a secure random state parameter (minimum 8 characters as required by Vend)
+        $state = bin2hex(random_bytes(16)); // 32 characters, more than sufficient
+
+        // Store the state in the session for validation
+        $this->controller->getRequest()->getSession()->set('vend_oauth_state', $state);
+
+        return sprintf(
+            "https://secure.vendhq.com/connect?response_type=code&client_id=%s&redirect_uri=%s&state=%s",
+            $clientID,
+            $redirectURI,
+            $state
+        );
     }
 
     /**

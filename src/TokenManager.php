@@ -155,7 +155,6 @@ class TokenManager
     }
 
     /**
-     * Get the first token. Only ever called the first time from Authorise_Controller.php
      * @param $code
      * @return bool
      */
