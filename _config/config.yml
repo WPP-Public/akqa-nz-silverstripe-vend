@@ -6,7 +6,7 @@ SilverStripe\Core\Injector\Injector:
   Heyday\Vend\TokenManager:
     class: Heyday\Vend\TokenManager
 
-  Heyday\Vend\SilverStripe\Authorise_Controller:
+  Heyday\Vend\SilverStripe\AuthoriseController:
     properties:
       TokenManager: '%$Heyday\Vend\TokenManager'
 
