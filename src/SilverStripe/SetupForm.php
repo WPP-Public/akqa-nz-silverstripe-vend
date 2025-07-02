@@ -40,14 +40,17 @@ class SetupForm extends Form
             $vendShopName = $config->VendShopName;
         }
 
-        $fields = FieldList::create();
-        $actions = FieldList::create();
-        $fields->add(
+        $fields = FieldList::create([
             LiteralField::create(
                 'vend',
                 "<h1>Vend Integration</h1>"
             )
-        );
+        ]);
+
+        $actions = FieldList::create([
+            FormAction::create('doSave', 'Save')
+                ->addExtraClass('btn btn-primary')
+        ]);
 
         if (!is_null($vendAccessToken) && !empty($vendAccessToken)) {
             $url = $this->getAuthURL();
@@ -55,8 +58,9 @@ class SetupForm extends Form
                 LiteralField::create(
                     'explanation',
                     sprintf(
-                        "<p>You're all setup!<br> If you need to reauthenticate then <a href='%s' target='_blank'>" .
-                            "select this</a> to do so.</p>",
+                        "<div class='alert alert-success'>" .
+                            "You're all setup!<br> If you need to reauthenticate then <a href='%s' target='_blank'>" .
+                            "select this</a> to do so.</div>",
                         $url
                     )
                 )
@@ -88,9 +92,6 @@ class SetupForm extends Form
             )
         );
 
-        $actions->push(FormAction::create('doSave', 'Save'));
-
-        // Reduce attack surface by enforcing POST requests
         $this->setFormMethod('POST', true);
 
         parent::__construct($controller, $name, $fields, $actions);
